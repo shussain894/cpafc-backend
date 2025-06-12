@@ -20,8 +20,12 @@ public class MongoTest {
                 .append("team", "Under 13 Lions");
 
         collection.insertOne(child);
+         System.out.println("Inserted child" + child.toJson());
 
-        System.out.println("Inserted child" + child.toJson());
+         for (Document doc : collection.find()) {
+             System.out.println("👦 Child found: " + doc.toJson());
+         }
+
      }
     }
 }

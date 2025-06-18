@@ -1,3 +1,5 @@
+package teams;
+
 import com.mongodb.client.*;
 import org.bson.Document;
 

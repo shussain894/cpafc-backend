@@ -1,10 +1,10 @@
 package teams;
 
-public class Teams {
+public class Team {
     private String ageGroup;
     private String name;
 
-    public Teams(String ageGroup, String name) {
+    public Team(String ageGroup, String name) {
         this.ageGroup = ageGroup;
         this.name = name;
     }

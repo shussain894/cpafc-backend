@@ -22,8 +22,8 @@ public class TeamService {
         teamsCollection = database.getCollection("teams");
     }
 
-    public void insertTeams(List<Teams> teams) {
-        for (Teams team : teams) {
+    public void insertTeams(List<Team> teams) {
+        for (Team team : teams) {
             Document doc = new Document("name", team.getName())
                     .append("ageGroup", team.getAgeGroup());
             teamsCollection.insertOne(doc);
@@ -31,14 +31,14 @@ public class TeamService {
         }
     }
 
-    public List<Teams> getAllTeams() {
-        List<Teams> teams = new ArrayList<>();
+    public List<Team> getAllTeams() {
+        List<Team> teams = new ArrayList<>();
 
         for (Document doc : teamsCollection.find()) {
             String name = doc.getString("name");
             String ageGroup = doc.getString("ageGroup");
 
-            Teams team = new Teams(name, ageGroup);
+            Team team = new Team(name, ageGroup);
             teams.add(team);
         }
 
@@ -48,17 +48,17 @@ public class TeamService {
     public static void main(String[] args) {
         TeamService service = new TeamService();
 
-        List<Teams> teams = java.util.Arrays.asList(
-                new Teams("Lions", "U6"),
-                new Teams("Tigers", "U6"),
-                new Teams("Lions", "U7"),
-                new Teams("Tigers", "U7")
+        List<Team> teams = java.util.Arrays.asList(
+                new Team("Lions", "U6"),
+                new Team("Tigers", "U6"),
+                new Team("Lions", "U7"),
+                new Team("Tigers", "U7")
         );
 
         service.insertTeams(teams);
 
-        List<Teams> allTeams = service.getAllTeams();
-        for (Teams team : allTeams) {
+        List<Team> allTeams = service.getAllTeams();
+        for (Team team : allTeams) {
             System.out.println("Age Group: " + team.getAgeGroup() + " " + team.getName());
         }
     }

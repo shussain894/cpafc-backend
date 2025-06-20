@@ -76,12 +76,12 @@ public class ChildService {
                 System.out.println(fullName + ": " + oldTeam + " ➝ " + newTeam);
                 return true;
             } else {
-                System.out.println("⚠️ No changes made for " + fullName);
+                System.out.println("No changes made for " + fullName);
                 return false;
             }
 
         } catch (Exception e) {
-            System.out.println("⚠️ Error updating child: " + e.getMessage());
+            System.out.println("Error updating child: " + e.getMessage());
             return false;
         }
     }
@@ -109,9 +109,9 @@ public class ChildService {
         childrenCollection.deleteMany(new Document());
     }
 
-//    public boolean assignChildToTeam(String firstName, String lastName, String team) {
-//        return updateChildTeamById(firstName, lastName, team);
-//    }
+    public boolean assignChildToTeamById(String childId, String team) {
+        return updateChildTeamById(childId, team);
+    }
 
     public static void main(String[] args) {
         ChildService service = new ChildService();
@@ -119,10 +119,6 @@ public class ChildService {
         service.clearChildren();
 
         service.insertChildren(ChildData.getSampleChildren());
-
-//        if (service.getAllChildren().isEmpty()) {
-//            service.insertChildren(ChildData.getSampleChildren());
-//        }
 
         System.out.println("All children:");
         for (Child child : service.getAllChildren()) {

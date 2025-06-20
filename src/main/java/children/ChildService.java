@@ -6,9 +6,10 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.client.result.DeleteResult;
-import children.ChildData;
+import static com.mongodb.client.model.Filters.eq;
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,43 +26,30 @@ public class ChildService {
     public void insertChildren(List<Document> children) {
         for (Document doc : children) {
             childrenCollection.insertOne(doc);
-            System.out.println("child added " + doc.getString("firstName") + " " + doc.getString("lastName"));
         }
     }
-
 
     public List<Child> getAllChildren() {
         List<Child> children = new ArrayList<>();
         for (Document doc : childrenCollection.find()) {
+            ObjectId id = doc.getObjectId("_id");
             String firstName = doc.getString("firstName");
             String lastName = doc.getString("lastName");
             int age = doc.getInteger("age");
             String team = doc.getString("team");
-            children.add(new Child(firstName, lastName, age, team));
+            children.add(new Child(id, firstName, lastName, age, team));
         }
         return children;
     }
 
-    public static void main(String[] args) {
-        ChildService service = new ChildService();
-
-        service.childrenCollection.drop();
-
-        service.insertChildren(ChildData.getSampleChildren());
-
-        boolean updated = service.updateChildTeam("Rio", "Lacey", "U13 Tigers");
-        System.out.println("Update success: " + updated);
-
-        boolean assigned = service.assignChildToTeam("Kaylen", "Smith", "Under 13 Tigers");
-        System.out.println("Assign success: " + assigned);
-
-        boolean deleted = service.deleteChild("Amir", "Khan");
-        System.out.println("Delete success: " + deleted);
-
-        System.out.println("All children in DB:");
-        service.getAllChildren().forEach(System.out::println);
+    public Document findChildById(String id) {
+        try {
+            ObjectId objectId = new ObjectId(id);
+            return childrenCollection.find(eq("_id", objectId)).first();
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
-
 
     public boolean updateChildTeam(String firstName, String lastName, String newTeam) {
         Document filter = new Document("firstName", firstName)
@@ -70,14 +58,7 @@ public class ChildService {
         Document update = new Document("$set", new Document("team", newTeam));
 
         UpdateResult result = childrenCollection.updateOne(filter, update);
-
-        if (result.getModifiedCount() > 0) {
-            System.out.println("Updated " + firstName + "'s team to " + newTeam);
-            return true;
-        } else {
-            System.out.println("No matching child found to update.");
-            return false;
-        }
+        return result.getModifiedCount() > 0;
     }
 
     public boolean deleteChild(String firstName, String lastName) {
@@ -85,18 +66,23 @@ public class ChildService {
                 .append("lastName", lastName);
 
         DeleteResult result = childrenCollection.deleteOne(filter);
-
-        if (result.getDeletedCount() > 0) {
-            System.out.println("Deleted child: " + firstName + " " + lastName);
-            return true;
-        } else {
-            System.out.println("No matching child found to delete.");
-            return false;
-        }
+        return result.getDeletedCount() > 0;
     }
 
     public boolean assignChildToTeam(String firstName, String lastName, String team) {
         return updateChildTeam(firstName, lastName, team);
     }
 
+    public static void main(String[] args) {
+        ChildService service = new ChildService();
+
+        service.childrenCollection.drop();
+        service.insertChildren(ChildData.getSampleChildren());
+
+        service.updateChildTeam("Rio", "Lacey", "U13 Tigers");
+        service.assignChildToTeam("Kaylen", "Smith", "Under 13 Tigers");
+        service.deleteChild("Amir", "Khan");
+
+        service.getAllChildren().forEach(System.out::println);
+    }
 }

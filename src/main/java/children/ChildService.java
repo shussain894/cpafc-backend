@@ -1,4 +1,5 @@
 package children;
+import children.ChildData;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -7,6 +8,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.client.result.DeleteResult;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.set;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -51,37 +53,89 @@ public class ChildService {
         }
     }
 
-    public boolean updateChildTeam(String firstName, String lastName, String newTeam) {
-        Document filter = new Document("firstName", firstName)
-                .append("lastName", lastName);
+    public boolean updateChildTeamById(String id, String newTeam) {
+        try {
+            ObjectId objectId = new ObjectId(id);
+            Document child = childrenCollection.find(eq("_id", objectId)).first();
 
-        Document update = new Document("$set", new Document("team", newTeam));
+            if (child == null) {
+                System.out.println("No matching child found with _id: " + id);
+                return false;
+            }
 
-        UpdateResult result = childrenCollection.updateOne(filter, update);
-        return result.getModifiedCount() > 0;
+            String fullName = child.getString("firstName") + " " + child.getString("lastName");
+            String oldTeam = child.getString("team");
+
+            UpdateResult updateResult = childrenCollection.updateOne(
+                    eq("_id", objectId),
+                    set("team", newTeam)
+            );
+
+            if (updateResult.getModifiedCount() > 0) {
+                System.out.println("Team updated for " + fullName);
+                System.out.println(fullName + ": " + oldTeam + " ➝ " + newTeam);
+                return true;
+            } else {
+                System.out.println("⚠️ No changes made for " + fullName);
+                return false;
+            }
+
+        } catch (Exception e) {
+            System.out.println("⚠️ Error updating child: " + e.getMessage());
+            return false;
+        }
     }
 
-    public boolean deleteChild(String firstName, String lastName) {
-        Document filter = new Document("firstName", firstName)
-                .append("lastName", lastName);
 
-        DeleteResult result = childrenCollection.deleteOne(filter);
-        return result.getDeletedCount() > 0;
+    public boolean deleteChildById(String id) {
+        try {
+            ObjectId objectId = new ObjectId(id);
+            DeleteResult result = childrenCollection.deleteOne(eq("_id", objectId));
+
+            if (result.getDeletedCount() > 0) {
+                System.out.println("Deleted child with _id: " + id);
+                return true;
+            } else {
+                System.out.println("No child found to delete with _id: " + id);
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println("Error deleting child: " + e.getMessage());
+            return false;
+        }
     }
 
-    public boolean assignChildToTeam(String firstName, String lastName, String team) {
-        return updateChildTeam(firstName, lastName, team);
+    public void clearChildren() {
+        childrenCollection.deleteMany(new Document());
     }
+
+//    public boolean assignChildToTeam(String firstName, String lastName, String team) {
+//        return updateChildTeamById(firstName, lastName, team);
+//    }
 
     public static void main(String[] args) {
         ChildService service = new ChildService();
 
-        service.childrenCollection.drop();
+        service.clearChildren();
+
         service.insertChildren(ChildData.getSampleChildren());
 
-        service.updateChildTeam("Rio", "Lacey", "U13 Tigers");
-        service.assignChildToTeam("Kaylen", "Smith", "Under 13 Tigers");
-        service.deleteChild("Amir", "Khan");
+//        if (service.getAllChildren().isEmpty()) {
+//            service.insertChildren(ChildData.getSampleChildren());
+//        }
+
+        System.out.println("All children:");
+        for (Child child : service.getAllChildren()) {
+            System.out.println(child);
+        }
+
+        String testId = "68556297dd0f74523dae7e22";
+
+        boolean updateSuccess = service.updateChildTeamById(testId, "U13 Tigers");
+        System.out.println("Update success: " + updateSuccess);
+
+        boolean deleteSuccess = service.deleteChildById(testId);
+        System.out.println("Delete success: " + deleteSuccess);
 
         service.getAllChildren().forEach(System.out::println);
     }

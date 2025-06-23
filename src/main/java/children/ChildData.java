@@ -12,28 +12,23 @@ public class ChildData {
         children.add(new Document("_id", new ObjectId("68556297dd0f74523dae7e22"))
                 .append("firstName", "Rio")
                 .append("lastName", "Lacey")
-                .append("age", 12)
-                .append("team", "U13 Lions"));
+                .append("age", 12));
 
         children.add(new Document("firstName", "Amir")
                 .append("lastName", "Khan")
-                .append("age", 12)
-                .append("team", "U13 Lions"));
+                .append("age", 12));
 
         children.add(new Document("firstName", "Kaylen")
                 .append("lastName", "Smith")
-                .append("age", 12)
-                .append("team", "U13 Lions"));
+                .append("age", 12));
 
         children.add(new Document("firstName", "Lamar")
                 .append("lastName", "Jackson")
-                .append("age", 12)
-                .append("team", "U13 Tigers"));
+                .append("age", 12));
 
         children.add(new Document("firstName", "Lena")
                 .append("lastName", "Smith")
-                .append("age", 10)
-                .append("team", "Under 11 Lions"));
+                .append("age", 10));
 
         return children;
     }

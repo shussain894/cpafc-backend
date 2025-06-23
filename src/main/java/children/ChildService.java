@@ -39,6 +39,7 @@ public class ChildService {
             String lastName = doc.getString("lastName");
             int age = doc.getInteger("age");
             String team = doc.getString("team");
+            if (team == null) team = "Unassigned";
             children.add(new Child(id, firstName, lastName, age, team));
         }
         return children;
@@ -127,7 +128,10 @@ public class ChildService {
 
         String testId = "68556297dd0f74523dae7e22";
 
-        boolean updateSuccess = service.updateChildTeamById(testId, "U13 Tigers");
+        boolean success = service.assignChildToTeamById(testId, "U13 Tigers");
+        System.out.println("Assign success: " + success);
+
+        boolean updateSuccess = service.updateChildTeamById(testId, "U13 Jaguars");
         System.out.println("Update success: " + updateSuccess);
 
         boolean deleteSuccess = service.deleteChildById(testId);

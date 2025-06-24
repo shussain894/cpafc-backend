@@ -1,6 +1,7 @@
 package children;
-import children.ChildData;
 
+import app.MongoConnection;
+import app.SeedData;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -119,7 +120,8 @@ public class ChildService {
 
         service.clearChildren();
 
-        service.insertChildren(ChildData.getSampleChildren());
+        MongoDatabase database = MongoConnection.getDatabase();
+        SeedData.populate(database);
 
         System.out.println("All children:");
         for (Child child : service.getAllChildren()) {

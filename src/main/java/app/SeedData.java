@@ -3,10 +3,10 @@ package app;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 public class SeedData {
 
@@ -23,34 +23,44 @@ public class SeedData {
         );
 
         List<Document> coaches = Arrays.asList(
-                new Document("firstName", "Shah").append("lastName", "Hussain").append("team", "U13 Tigers"),
-                new Document("firstName", "Alice").append("lastName", "Brown").append("team", "U6 Lions"),
-                new Document("firstName", "Maya").append("lastName", "Murray").append("team", "U8 Tigers"),
-                new Document("firstName", "James").append("lastName", "Owen").append("team", "U10 Lions"),
-                new Document("firstName", "Liam").append("lastName", "Clark").append("team", "U13 Lions")
+                new Document("_id", new ObjectId("665a92c79c1fa42801759001"))
+                        .append("firstName", "Shah").append("lastName", "Hussain").append("team", "U13 Tigers"),
+                new Document("_id", new ObjectId("665a92c79c1fa42801759002"))
+                        .append("firstName", "Alice").append("lastName", "Brown").append("team", "U6 Lions"),
+                new Document("_id", new ObjectId("665a92c79c1fa42801759003"))
+                        .append("firstName", "Maya").append("lastName", "Murray").append("team", "U8 Tigers"),
+                new Document("_id", new ObjectId("665a92c79c1fa42801759004"))
+                        .append("firstName", "James").append("lastName", "Owen").append("team", "U10 Lions"),
+                new Document("_id", new ObjectId("665a92c79c1fa42801759005"))
+                        .append("firstName", "Liam").append("lastName", "Clark").append("team", "U13 Lions")
         );
         coachCollection.insertMany(coaches);
 
-        // Children
-        String[] firstNames = {"Amir", "Lena", "Kaylen", "Rio", "Lamar", "Zara", "Ethan", "Noah", "Sophia", "Emily", "Mason", "Ava", "Lucas", "Mila", "Logan", "Nina", "Leo", "Maya", "Zain", "Ellie"};
-        String[] lastNames = {"Smith", "Brown", "Jackson", "Khan", "Taylor", "Patel", "Clark", "Lewis", "Hall", "Young"};
+        List<Document> children = Arrays.asList(
+                new Document("_id", new ObjectId("665a92c79c1fa42801759401"))
+                        .append("firstName", "Amir").append("lastName", "Smith").append("age", 6).append("team", "U8 Tigers"),
+                new Document("_id", new ObjectId("665a92c79c1fa42801759402"))
+                        .append("firstName", "Lena").append("lastName", "Brown").append("age", 11).append("team", "U13 Tigers"),
+                new Document("_id", new ObjectId("665a92c79c1fa42801759403"))
+                        .append("firstName", "Kaylen").append("lastName", "Jackson").append("age", 6).append("team", "Unassigned"),
+                new Document("_id", new ObjectId("665a92c79c1fa42801759404"))
+                        .append("firstName", "Rio").append("lastName", "Khan").append("age", 13).append("team", "U6 Lions"),
+                new Document("_id", new ObjectId("665a92c79c1fa42801759405"))
+                        .append("firstName", "Lamar").append("lastName", "Taylor").append("age", 10).append("team", "U13 Tigers"),
+                new Document("_id", new ObjectId("665a92c79c1fa42801759406"))
+                        .append("firstName", "Zara").append("lastName", "Patel").append("age", 8).append("team", "Unassigned"),
+                new Document("_id", new ObjectId("665a92c79c1fa42801759407"))
+                        .append("firstName", "Ethan").append("lastName", "Clark").append("age", 12).append("team", "U13 Tigers"),
+                new Document("_id", new ObjectId("665a92c79c1fa42801759408"))
+                        .append("firstName", "Noah").append("lastName", "Lewis").append("age", 9).append("team", "Unassigned"),
+                new Document("_id", new ObjectId("665a92c79c1fa42801759409"))
+                        .append("firstName", "Sophia").append("lastName", "Hall").append("age", 10).append("team", "U8 Tigers"),
+                new Document("_id", new ObjectId("665a92c79c1fa4280175940a"))
+                        .append("firstName", "Emily").append("lastName", "Young").append("age", 11).append("team", "U13 Tigers")
+        );
 
-        Random rand = new Random();
+        childrenCollection.insertMany(children);
 
-        for (int i = 0; i < 20; i++) {
-            String firstName = firstNames[rand.nextInt(firstNames.length)];
-            String lastName = lastNames[rand.nextInt(lastNames.length)];
-            int age = rand.nextInt(8) + 6;
-            String team = rand.nextBoolean() ? teams.get(rand.nextInt(teams.size())) : "Unassigned";
-
-            Document child = new Document("firstName", firstName)
-                    .append("lastName", lastName)
-                    .append("age", age)
-                    .append("team", team);
-
-            childrenCollection.insertOne(child);
-        }
-
-        System.out.println("✅ Seeded 5 coaches, 20 children, and 8 teams (some assigned, some unassigned).");
+        System.out.println("✅ Seeded 5 coaches, 10 children, and 8 teams (some assigned, some unassigned).");
     }
 }

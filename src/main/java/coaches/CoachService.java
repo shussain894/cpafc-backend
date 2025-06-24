@@ -52,4 +52,37 @@ public class CoachService {
 
         return children;
     }
+
+    public boolean updateChildTeamByCoach(String coachFirstName, String coachLastName, String childId, String newTeam) {
+        Document coach = coachCollection.find(and(
+                eq("firstName", coachFirstName),
+                eq("lastName", coachLastName)
+        )).first();
+
+        if (coach == null) {
+            System.out.println("❌ Coach not found.");
+            return false;
+        }
+
+        String coachTeam = coach.getString("team");
+
+        Document child = childrenCollection.find(eq("_id", new ObjectId(childId))).first();
+
+        if (child == null) {
+            System.out.println("❌ Child not found.");
+            return false;
+        }
+
+        String childTeam = child.getString("team");
+        if (childTeam == null || !childTeam.equals(coachTeam)) {
+            System.out.println("❌ Coach cannot update this child. They are not in your team.");
+            return false;
+        }
+
+        Document update = new Document("$set", new Document("team", newTeam));
+        childrenCollection.updateOne(eq("_id", new ObjectId(childId)), update);
+        System.out.println("✅ Child moved from " + childTeam + " ➝ " + newTeam);
+        return true;
+    }
+
 }

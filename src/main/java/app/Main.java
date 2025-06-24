@@ -4,6 +4,7 @@ import coaches.CoachService;
 import children.Child;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import static com.mongodb.client.model.Filters.*;
 import org.bson.Document;
 
 public class Main {
@@ -22,13 +23,32 @@ public class Main {
         boolean success = coachService.registerCoach("Shah", "Hussain", "U13 Tigers");
 
         System.out.println(success
-                ? "\nCoach registration successful!"
-                : "\nCoach registration failed.");
+                ? "Coach registration successful!"
+                : "Coach registration failed.");
 
         System.out.println("\nChildren for Coach Shah Hussain:");
         for (Child child : coachService.getChildrenForCoach("Shah", "Hussain")) {
             System.out.println(child.getFirstName() + " " + child.getLastName()
                     + ", Age: " + child.getAge() + ", Team: " + child.getTeam());
+        }
+
+        String coachFirstName = "Shah";
+        String coachLastName = "Hussain";
+        String childIdToMove = "";
+
+        for (Document doc : childrenCollection.find(eq("team", "U13 Tigers"))) {
+            childIdToMove = doc.getObjectId("_id").toHexString();
+            break;
+        }
+
+        if (!childIdToMove.isEmpty()) {
+            boolean moveSuccess = coachService.updateChildTeamByCoach(coachFirstName, coachLastName, childIdToMove, "U13 Lions");
+
+            System.out.println(moveSuccess
+                    ? "Child transfer successful."
+                    : "Child transfer failed.");
+        } else {
+            System.out.println("No child found in U13 Tigers to test transfer.");
         }
     }
 

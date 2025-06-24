@@ -131,12 +131,6 @@ public class ChildService {
         boolean success = service.assignChildToTeamById(testId, "U13 Tigers");
         System.out.println("Assign success: " + success);
 
-//        boolean updateSuccess = service.updateChildTeamById(testId, "U13 Jaguars");
-//        System.out.println("Update success: " + updateSuccess);
-
-//        boolean deleteSuccess = service.deleteChildById(testId);
-//        System.out.println("Delete success: " + deleteSuccess);
-
         System.out.println("Coach view for U13 Tigers");
         List<Child> coachChildren = service.getAllChildren();
         for (Child c : coachChildren) {

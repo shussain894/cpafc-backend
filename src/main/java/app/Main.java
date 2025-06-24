@@ -1,10 +1,13 @@
 package app;
 
 import coaches.CoachService;
+import services.AdminService;
 import children.Child;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import static com.mongodb.client.model.Filters.*;
+
 import org.bson.Document;
 
 public class Main {
@@ -50,6 +53,16 @@ public class Main {
         } else {
             System.out.println("No child found in U13 Tigers to test transfer.");
         }
+
+        AdminService adminService = new AdminService(database);
+
+        System.out.println("\nAdmin view of all children:");
+        adminService.getAllChildren().forEach(System.out::println);
+
+        adminService.addTeam("U14 Wolves");
+
+        boolean AssignSuccess = adminService.assignChildToTeam("665a92c79c1fa42801759403", "U14 Wolves");
+        System.out.println(AssignSuccess ? "Child assigned to team." : "Assignment failed.");
     }
 
     private static void printAllChildren(MongoCollection<Document> childrenCollection) {

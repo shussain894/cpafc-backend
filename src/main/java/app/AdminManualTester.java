@@ -10,7 +10,7 @@ import static com.mongodb.client.model.Filters.*;
 
 import org.bson.Document;
 
-public class Main {
+public class AdminManualTester {
     public static void main(String[] args) {
 
         MongoDatabase database = MongoConnection.getDatabase();
@@ -63,6 +63,50 @@ public class Main {
 
         boolean AssignSuccess = adminService.assignChildToTeam("665a92c79c1fa42801759403", "U14 Wolves");
         System.out.println(AssignSuccess ? "Child assigned to team." : "Assignment failed.");
+
+        // === TEAM TEST ===
+        adminService.addTeam("Test Team");
+        System.out.println("Team added.");
+
+        boolean teamUpdated = adminService.updateTeamName("Test Team", "Updated Team");
+        System.out.println("Team updated: " + teamUpdated);
+
+        boolean teamDeleted = adminService.deleteTeam("Updated Team");
+        System.out.println("Team deleted: " + teamDeleted);
+
+        // === CHILD TEST ===
+        Document child = new Document("firstName", "Test").append("lastName", "Child").append("age", 8);
+        adminService.addChild(child);
+        System.out.println("Child added.");
+
+        String childId = adminService.getAllChildren().get(0).getObjectId("_id").toHexString();
+
+        boolean childUpdated = adminService.updateChild(childId, new Document("age", 9));
+        System.out.println("Child updated: " + childUpdated);
+
+        boolean childDeleted = adminService.deleteChild(childId);
+        System.out.println("Child deleted: " + childDeleted);
+
+        // === COACH TEST ===
+        Document coach = new Document("firstName", "Test").append("lastName", "Coach").append("team", "None");
+        adminService.addCoach(coach);
+        System.out.println("Coach added.");
+
+        String coachId = adminService.getAllCoaches().get(0).getObjectId("_id").toHexString();
+
+        boolean coachUpdated = adminService.updateCoach(coachId, new Document("team", "Updated Team"));
+        System.out.println("Coach updated: " + coachUpdated);
+
+        boolean coachDeleted = adminService.deleteCoach(coachId);
+        System.out.println("Coach deleted: " + coachDeleted);
+
+        // === ADMIN ACCESS TEST ===
+        String email = "admin@example.com";
+        adminService.grantAdminAccess(email);
+        System.out.println("Admin access granted.");
+
+        adminService.revokeAdminAccess(email);
+        System.out.println("Admin access revoked.");
     }
 
     private static void printAllChildren(MongoCollection<Document> childrenCollection) {

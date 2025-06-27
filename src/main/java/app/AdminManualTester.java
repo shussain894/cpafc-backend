@@ -3,6 +3,9 @@ package app;
 import coaches.CoachService;
 import services.AdminService;
 import children.Child;
+import helpers.ChildBuilder;
+import helpers.CoachBuilder;
+import helpers.TeamBuilder;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -75,7 +78,7 @@ public class AdminManualTester {
         System.out.println("Team deleted: " + teamDeleted);
 
         // === CHILD TEST ===
-        Document child = new Document("firstName", "Test").append("lastName", "Child").append("age", 8);
+        Document child = helpers.ChildBuilder.build("Jamie", "Tyson", 8, null);
         adminService.addChild(child);
         System.out.println("Child added.");
 
@@ -88,7 +91,7 @@ public class AdminManualTester {
         System.out.println("Child deleted: " + childDeleted);
 
         // === COACH TEST ===
-        Document coach = new Document("firstName", "Test").append("lastName", "Coach").append("team", "None");
+        Document coach = helpers.CoachBuilder.build("Michael", "Boola", "None");
         adminService.addCoach(coach);
         System.out.println("Coach added.");
 

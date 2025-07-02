@@ -3,6 +3,8 @@ package com.cpafc.controller;
 import com.cpafc.model.Child;
 import com.cpafc.repository.ChildRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +32,7 @@ public class ChildController {
     // Add a new child
     @PostMapping
     public Child createChild(@RequestBody Child child) {
+        System.out.println("Received child: " + child.getFirstName() + " " + child.getLastName());
         return childRepository.save(child);
     }
 
@@ -42,7 +45,20 @@ public class ChildController {
 
     // Delete a child
     @DeleteMapping("/{id}")
-    public void deleteChild(@PathVariable String id) {
-        childRepository.deleteById(id);
+    public ResponseEntity<String> deleteChild(@PathVariable String id) {
+        if (childRepository.existsById(id)) {
+            childRepository.deleteById(id);
+            return ResponseEntity.ok("Child deleted successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Child not found with ID: " + id);
+        }
     }
+
+
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<String> handleException(Exception e) {
+//        e.printStackTrace();  // logs the error stack trace
+//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
+//    }
 }

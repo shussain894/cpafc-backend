@@ -28,9 +28,15 @@ public class CoachController {
     }
 
     @PostMapping
-    public Coach createCoach(@RequestBody Coach coach) {
-        System.out.println("Received coach: " + coach.getFirstName() + " " + coach.getLastName());
-        return coachRepository.save(coach);
+    public ResponseEntity<?> createCoach(@RequestBody Coach coach) {
+        Optional<Coach> existingCoach = coachRepository.findByFirstNameAndLastName(
+                coach.getFirstName(), coach.getLastName()
+        );
+        if (existingCoach.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Coach '" + coach.getFirstName() + " " + coach.getLastName() + "' already exists.");
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(coachRepository.save(coach));
     }
 
     @PutMapping("/{id}")

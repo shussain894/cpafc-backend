@@ -4,6 +4,8 @@ import com.cpafc.model.Team;
 import com.cpafc.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,8 +28,13 @@ public class TeamController {
     }
 
     @PostMapping
-    public Team createTeam(@RequestBody Team team) {
-        return teamRepository.save(team);
+    public ResponseEntity<?> createTeam(@RequestBody Team team) {
+        Optional<Team> existingTeam = teamRepository.findByName(team.getName());
+        if (existingTeam.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Team with name '" + team.getName() + "' already exists.");
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(teamRepository.save(team));
     }
 
     @PutMapping("/{id}")

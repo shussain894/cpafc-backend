@@ -13,14 +13,23 @@ public class SeedData {
     public static void populate(MongoDatabase database) {
         MongoCollection<Document> childrenCollection = database.getCollection("children");
         MongoCollection<Document> coachCollection = database.getCollection("coaches");
+        MongoCollection<Document> teamsCollection = database.getCollection("teams");
 
         childrenCollection.deleteMany(new Document());
         coachCollection.deleteMany(new Document());
+
+        teamsCollection.deleteMany(new Document());
 
         List<String> teams = Arrays.asList(
                 "U6 Lions", "U6 Tigers", "U8 Lions", "U8 Tigers",
                 "U10 Lions", "U10 Tigers", "U13 Lions", "U13 Tigers"
         );
+
+        List<Document> teamDocs = teams.stream()
+                .map(teamName -> new Document("name", teamName))
+                .toList();
+
+        teamsCollection.insertMany(teamDocs);
 
         List<Document> coaches = Arrays.asList(
                 new Document("_id", new ObjectId("665a92c79c1fa42801759001"))

@@ -54,11 +54,4 @@ public class ChildController {
                     .body("Child not found with ID: " + id);
         }
     }
-
-
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<String> handleException(Exception e) {
-//        e.printStackTrace();  // logs the error stack trace
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
-//    }
 }

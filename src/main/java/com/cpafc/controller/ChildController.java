@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/children")
@@ -37,6 +38,22 @@ public class ChildController {
     public Child updateChild(@PathVariable String id, @RequestBody Child updatedChild) {
         updatedChild.setId(id);
         return childRepository.save(updatedChild);
+    }
+
+    @PutMapping("/{id}/assign-team")
+    public ResponseEntity<String> assignChildToTeam(@PathVariable String id, @RequestBody Map<String, String> request) {
+        String teamName = request.get("team");
+        Optional<Child> optionalChild = childRepository.findById(id);
+
+        if (optionalChild.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Child not found");
+        }
+
+        Child child = optionalChild.get();
+        child.setTeam(teamName);
+        childRepository.save(child);
+
+        return ResponseEntity.ok("Child assigned to team: " + teamName);
     }
 
     @DeleteMapping("/{id}")

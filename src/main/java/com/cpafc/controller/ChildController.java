@@ -17,33 +17,28 @@ public class ChildController {
     @Autowired
     private ChildRepository childRepository;
 
-    // Get all children
     @GetMapping
     public List<Child> getAllChildren() {
         return childRepository.findAll();
     }
 
-    // Get child by ID
     @GetMapping("/{id}")
     public Optional<Child> getChildById(@PathVariable String id) {
         return childRepository.findById(id);
     }
 
-    // Add a new child
     @PostMapping
     public Child createChild(@RequestBody Child child) {
         System.out.println("Received child: " + child.getFirstName() + " " + child.getLastName());
         return childRepository.save(child);
     }
 
-    // Update an existing child
     @PutMapping("/{id}")
     public Child updateChild(@PathVariable String id, @RequestBody Child updatedChild) {
         updatedChild.setId(id);
         return childRepository.save(updatedChild);
     }
 
-    // Delete a child
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteChild(@PathVariable String id) {
         if (childRepository.existsById(id)) {

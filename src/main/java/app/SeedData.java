@@ -21,8 +21,9 @@ public class SeedData {
         teamsCollection.deleteMany(new Document());
 
         List<String> teams = Arrays.asList(
-                "U6 Lions", "U6 Tigers", "U8 Lions", "U8 Tigers",
-                "U10 Lions", "U10 Tigers", "U13 Lions", "U13 Tigers"
+                "U6 Lions", "U6 Tigers", "U7 Lions", "U7 Tigers", "U8 Lions", "U8 Tigers", "U9 Lions", "U9 Tigers",
+                "U10 Lions", "U10 Tigers", "U11 Lions", "U11 Tigers", "U12 Lions", "U12 Tigers", "U13 Lions", "U13 Tigers",
+                "U14 Lions"
         );
 
         List<Document> teamDocs = teams.stream()

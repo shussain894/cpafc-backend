@@ -8,16 +8,22 @@ public class Coach {
 
     @Id
     private String id;
+
     private String firstName;
     private String lastName;
     private String team;
+    private String email;
+
+    private Role role;
 
     public Coach() {}
 
-    public Coach(String firstName, String lastName, String team) {
+    public Coach(String firstName, String lastName, String email, String team, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.email = email;
         this.team = team;
+        this.role = role;
     }
 
     public String getId() { return id; }
@@ -31,4 +37,10 @@ public class Coach {
 
     public String getTeam() { return team; }
     public void setTeam(String team) { this.team = team; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
 }

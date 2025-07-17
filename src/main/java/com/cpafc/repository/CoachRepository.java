@@ -9,4 +9,5 @@ import java.util.List;
 public interface CoachRepository extends MongoRepository<Coach, String> {
     List<Coach> findByTeam(String team);
     Optional<Coach> findByFirstNameAndLastName(String firstName, String lastName);
+    Optional<Coach> findByEmail(String email);
 }

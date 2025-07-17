@@ -1,11 +1,11 @@
 package app;
 
-import com.mongodb.client.MongoDatabase;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@SpringBootApplication(scanBasePackages = "com.cpafc")
 public class App {
     public static void main(String[] args) {
-        MongoDatabase db = MongoConnection.getDatabase();
-        SeedData.populate(db);
+        SpringApplication.run(App.class, args);
     }
 }
-

@@ -36,4 +36,9 @@ public class AdminController {
             return ResponseEntity.badRequest().body("No admin found with email: " + admin.getEmail());
         }
     }
+
+    @GetMapping("/check")
+    public String checkAdminAccess() {
+        return "You are an admin!";
+    }
 }

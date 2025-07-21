@@ -1,7 +1,6 @@
 package com.cpafc.interceptor;
 
 import com.cpafc.model.Coach;
-import com.cpafc.model.Role;
 import com.cpafc.repository.CoachRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,32 +34,9 @@ public class AdminCheckInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        Coach coach = optionalCoach.get();
+        request.setAttribute("currentCoach", optionalCoach.get());
 
-        // Full access if ADMIN
-        if (coach.getRole() == Role.ADMIN) {
-            return true;
-        }
-
-        String requestPath = request.getRequestURI();
-        String method = request.getMethod();
-
-        // Example rule: allow GET access to /api/children?team=X only if team matches
-        if (requestPath.contains("/api/children") && "GET".equalsIgnoreCase(method)) {
-            String teamParam = request.getParameter("team");
-            if (teamParam != null && teamParam.equals(coach.getTeam())) {
-                return true;
-            } else {
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                response.getWriter().write("Access denied: You can only view children from your own team.");
-                return false;
-            }
-        }
-
-        // allow POST/PUT/DELETE on children only if the coach owns that team (add later)
-        // Otherwise, deny by default
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        response.getWriter().write("Access denied: Only admins can perform this operation.");
-        return false;
+        return true;
     }
 }
+

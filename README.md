@@ -1,6 +1,6 @@
-# ⚽ CPAFC Team Manager – Backend API
+# ⚽ CPAFC Team Admin – Backend API
 
-This is the backend API for **CPAFC Team Manager App**, a role-based web application that allows coaches and admins to manage football teams, players (children), and training data.
+This is the backend API for **CPAFC Team Admin App**, a role-based web application that allows coaches and admins to manage football teams, players (children), and training data.
 
 Built with **Spring Boot** and **MongoDB**, the API enforces **role-based access control (RBAC)** for admin and coach roles.
 

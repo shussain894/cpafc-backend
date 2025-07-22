@@ -8,12 +8,10 @@ public class Coach {
 
     @Id
     private String id;
-
     private String firstName;
     private String lastName;
     private String team;
     private String email;
-
     private Role role;
 
     public Coach() {}

@@ -105,13 +105,23 @@ cd cpafc-backend
 ```
 
 ### 2. Set up MongoDB
-
+```bash
 mongodb://localhost:27017
+````
 The app connects to a database called cpafc-test
 
 ### 3. Run the app
 
 Using Maven wrapper:
+```bash
 ./mvnw spring-boot:run
+```
+
+## 🔮 Next Steps
+
+- 🌍 Build React or Next.js frontend
+- 🔐 Add real authentication
+- 🧪 Add integration & unit tests
+- 🗃️ Add fixtures data and match results
 
 
